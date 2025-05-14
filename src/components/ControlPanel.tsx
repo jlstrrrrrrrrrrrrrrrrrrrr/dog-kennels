@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ControlButton from "./ControlButton";
 
 interface ControlPanelProps {}
 
@@ -22,26 +23,23 @@ const ControlPanel: React.FC<ControlPanelProps> = () => {
       <p className="text-sm text-gray-700 font-medium">Board Control</p>
       <div className="flex space-x-2 justify-center">
         {!isEditing ? (
-          <button
+          <ControlButton
+            label="Edit Board"
             onClick={toggleEditingState}
-            className="px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-150"
-          >
-            Edit Board
-          </button>
+            variant="primary"
+          />
         ) : (
           <>
-            <button
+            <ControlButton
+              label="Save Changes"
               onClick={saveChanges}
-              className="px-4 py-2 text-sm font-medium bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors duration-150"
-            >
-              Save Changes
-            </button>
-            <button
+              variant="success"
+            />
+            <ControlButton
+              label=" Cancel Edits"
               onClick={cancelChanges}
-              className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors duration-150"
-            >
-              Cancel Edits
-            </button>
+              variant="danger"
+            />
           </>
         )}
       </div>
