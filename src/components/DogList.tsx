@@ -13,7 +13,7 @@ const DogList: React.FC<DogListProps> = ({ dogs }) => {
       {dogs.length === 0 ? (
         <p className="text-gray-500">No unassigned dogs.</p>
       ) : (
-        <div className="space-y-3 max-h-96 overflow-y-auto p-1">
+        <div className="max-h-96 space-y-3 overflow-y-auto p-1">
           {dogs.map((dog) => (
             <DogCard key={dog.id} dog={dog} />
           ))}

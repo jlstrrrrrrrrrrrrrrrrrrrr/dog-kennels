@@ -34,7 +34,7 @@ const KennelBoard = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex h-screen items-center justify-center">
         Loading kennel data...
       </div>
     );
@@ -42,23 +42,23 @@ const KennelBoard = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen text-red-500">
+      <div className="flex h-screen items-center justify-center text-red-500">
         Error: {error}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col space-y-4">
-      <header className="bg-white shadow p-4 rounded-lg">
+    <div className="flex min-h-screen flex-col space-y-4 bg-gray-100 p-4">
+      <header className="rounded-lg bg-white p-4 shadow">
         <ControlPanel />
       </header>
 
-      <div className="flex flex-col md:flex-row flex-grow space-y-4 md:space-y-0 md:space-x-4">
-        <aside className="w-full md:w-1/3 bg-white p-4 shadow rounded-lg">
+      <div className="flex flex-grow flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+        <aside className="w-full rounded-lg bg-white p-4 shadow md:w-1/3">
           <DogList dogs={dogs.filter((dog) => !dog.kennelId)} />
         </aside>
-        <main className="w-full md:w-2/3 bg-white p-4 shadow rounded-lg">
+        <main className="w-full rounded-lg bg-white p-4 shadow md:w-2/3">
           <KennelGrid kennels={kennels} dogs={dogs} />
         </main>
       </div>

@@ -7,7 +7,7 @@ interface DogCardProps {
 
 const DogCard: React.FC<DogCardProps> = ({ dog }) => {
   return (
-    <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg shadow hover:shadow-md transition-shadow duration-200 cursor-grab">
+    <div className="cursor-grab rounded-lg border border-blue-200 bg-blue-50 p-3 shadow transition-shadow duration-200 hover:shadow-md">
       <h3 className="text-md font-semibold text-blue-800">{dog.name}</h3>
       <p className="text-xs text-gray-600">Chip: {dog.chipNumber}</p>
     </div>

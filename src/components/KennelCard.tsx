@@ -15,30 +15,30 @@ const KennelCard: React.FC<KennelCardProps> = ({ kennel, dogsInKennel }) => {
   return (
     <div
       className={cn(
-        "bg-green-50 border border-green-200 p-4 rounded-lg",
-        "shadow hover:shadow-lg transition-shadow duration-200",
+        "rounded-lg border border-green-200 bg-green-50 p-4",
+        "shadow transition-shadow duration-200 hover:shadow-lg",
         "flex flex-col space-y-2",
         {
-          "border-red-300 bg-red-50": isFull,
+          "border-red-300 bg-red-50": isFull
         }
       )}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-green-800">{kennel.name}</h3>
         <span
           className={cn("text-sm font-medium", {
             "text-red-600": isFull,
-            "text-gray-600": !isFull,
+            "text-gray-600": !isFull
           })}
         >
           Capacity: {capacityStatus}
         </span>
       </div>
-      <div className="min-h-[50px] bg-white/50 p-2 rounded border border-dashed border-gray-300 space-y-2 flex-grow">
+      <div className="min-h-[50px] flex-grow space-y-2 rounded border border-dashed border-gray-300 bg-white/50 p-2">
         {dogsInKennel.length > 0 ? (
           dogsInKennel.map((dog) => <DogCard key={dog.id} dog={dog} />)
         ) : (
-          <p className="text-xs text-gray-400 text-center py-2">Empty Kennel</p>
+          <p className="py-2 text-center text-xs text-gray-400">Empty Kennel</p>
         )}
       </div>
     </div>
