@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import KennelBoard from "./components/KennelBoard";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         Kennel Manager
       </h1>
       <KennelBoard />
+      <Toaster />
     </div>
   );
 }

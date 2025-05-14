@@ -19,6 +19,7 @@ import DogCard from "./DogCard";
 import { EditContext } from "../context/EditContext";
 import useFetchKennelData from "../hooks/useFetchKennelData";
 import { LoadingSpinner } from "./LoadingSpinner";
+import toast from "react-hot-toast";
 
 const KennelBoard = () => {
   const { data, isLoading, error } = useFetchKennelData();
@@ -51,10 +52,12 @@ const KennelBoard = () => {
       setKennels(snapshot.kennels);
     }
     setIsEditing(false);
+    toast.success("Changes successfully discarded.");
   }, [snapshot]);
 
   const saveChanges = useCallback(() => {
     setIsEditing(false);
+    toast.success("Changes saved successfully!");
   }, []);
 
   const handleDragStart = (event: DragStartEvent) => {
