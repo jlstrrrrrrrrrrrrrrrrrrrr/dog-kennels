@@ -9,7 +9,7 @@ interface DogCardProps {
   dog: Dog;
 }
 
-const DogCard: React.FC<DogCardProps> = ({ dog }) => {
+const DogCard: React.FC<DogCardProps> = React.memo(({ dog }) => {
   const { isEditing } = useEditContext();
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -45,6 +45,6 @@ const DogCard: React.FC<DogCardProps> = ({ dog }) => {
       <p className="text-xs text-gray-600">Chip: {dog.chipNumber}</p>
     </div>
   );
-};
+});
 
 export default DogCard;

@@ -10,3 +10,9 @@ export interface Kennel {
   name: string;
   capacity: number;
 }
+
+export interface DragData {
+  type: "dog" | "kennel-drop-zone" | "unassigned-area";
+  dog?: Dog;
+  kennelId?: string;
+}

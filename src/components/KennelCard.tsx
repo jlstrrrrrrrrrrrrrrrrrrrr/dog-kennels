@@ -1,7 +1,7 @@
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { cn } from "../lib/utils";
-import { Kennel, Dog } from "../types/types";
+import { Kennel, Dog, DragData } from "../types/types";
 import DogCard from "./DogCard";
 
 interface KennelCardProps {
@@ -12,7 +12,7 @@ interface KennelCardProps {
 const KennelCard: React.FC<KennelCardProps> = ({ kennel, dogsInKennel }) => {
   const { isOver, setNodeRef, active } = useDroppable({
     id: kennel.id,
-    data: { kennelId: kennel.id, type: "kennel-drop-zone" }
+    data: { kennelId: kennel.id, type: "kennel-drop-zone" } satisfies DragData
   });
 
   const capacityStatus = `(${dogsInKennel.length}/${kennel.capacity})`;

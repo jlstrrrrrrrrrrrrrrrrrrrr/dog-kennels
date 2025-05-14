@@ -1,7 +1,7 @@
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { cn } from "../lib/utils";
-import { Dog } from "../types/types";
+import { Dog, DragData } from "../types/types";
 import DogCard from "./DogCard";
 
 interface DogListProps {
@@ -13,7 +13,7 @@ export const UNASSIGNED_AREA_ID = "unassigned-dogs-drop-area"; // this area has 
 const DogList: React.FC<DogListProps> = ({ dogs }) => {
   const { isOver, setNodeRef } = useDroppable({
     id: UNASSIGNED_AREA_ID,
-    data: { type: "unassigned-area" }
+    data: { type: "unassigned-area" } satisfies DragData
   });
 
   return (
