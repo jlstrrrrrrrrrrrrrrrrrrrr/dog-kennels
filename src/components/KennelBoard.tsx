@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -36,19 +36,26 @@ const KennelBoard = () => {
   const mouseSensor = useSensor(MouseSensor);
   const sensors = useSensors(pointerSensor, mouseSensor);
 
-  const startEditing = () => {
+  const unassignedDogs = useMemo(() => {
+    return dogs.filter((dog) => !dog.kennelId);
+  }, [dogs]);
+
+  const startEditing = useCallback(() => {
     setSnapshot({ dogs, kennels }); // save snapshot before editing anything
     setIsEditing(true);
-  };
+  }, [dogs, kennels]);
 
-  const discardChanges = () => {
+  const discardChanges = useCallback(() => {
     if (snapshot) {
       setDogs(snapshot.dogs);
       setKennels(snapshot.kennels);
     }
-
     setIsEditing(false);
-  };
+  }, [snapshot]);
+
+  const saveChanges = useCallback(() => {
+    setIsEditing(false);
+  }, []);
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -156,14 +163,14 @@ const KennelBoard = () => {
           <header className="rounded-lg bg-white shadow">
             <ControlPanel
               startEditing={startEditing}
-              saveChanges={() => setIsEditing(false)}
+              saveChanges={saveChanges}
               discardChanges={discardChanges}
             />
           </header>
 
           <div className="flex flex-grow flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
             <aside className="w-full rounded-lg bg-white p-4 shadow md:w-1/3">
-              <DogList dogs={dogs.filter((dog) => !dog.kennelId)} />
+              <DogList dogs={unassignedDogs} />
             </aside>
 
             <main className="w-full rounded-lg bg-white p-4 shadow md:w-2/3">
