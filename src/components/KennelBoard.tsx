@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-  closestCenter
+  closestCenter,
+  useSensor,
+  PointerSensor,
+  MouseSensor,
+  useSensors
 } from "@dnd-kit/core";
 import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { Dog, Kennel } from "../types/types";
@@ -12,6 +16,7 @@ import DogList, { UNASSIGNED_AREA_ID } from "./DogList";
 import KennelGrid from "./KennelGrid";
 import ControlPanel from "./ControlPanel";
 import DogCard from "./DogCard";
+import { EditContext } from "../context/EditContext";
 
 const KennelBoard = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -19,30 +24,29 @@ const KennelBoard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [activeDog, setActiveDog] = useState<Dog | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [snapshot, setSnapshot] = useState<{
+    dogs: Dog[];
+    kennels: Kennel[];
+  }>();
 
-  useEffect(() => {
-    setIsLoading(true);
+  const pointerSensor = useSensor(PointerSensor);
+  const mouseSensor = useSensor(MouseSensor);
+  const sensors = useSensors(pointerSensor, mouseSensor);
 
-    const fetchKennelData = async () => {
-      try {
-        // simulate api call
-        await new Promise((resolve) => setTimeout(resolve, 500));
+  const startEditing = () => {
+    setSnapshot({ dogs, kennels }); // save snapshot before editing anything
+    setIsEditing(true);
+  };
 
-        // import mock json data
-        const kennelData = await import("../data/data.json");
+  const discardChanges = () => {
+    if (snapshot) {
+      setDogs(snapshot.dogs);
+      setKennels(snapshot.kennels);
+    }
 
-        setDogs(kennelData.dogs);
-        setKennels(kennelData.kennels);
-      } catch (err) {
-        setError("Failed to fetch kennel data");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchKennelData();
-  }, []);
+    setIsEditing(false);
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
@@ -113,6 +117,30 @@ const KennelBoard = () => {
     setActiveDog(null);
   };
 
+  useEffect(() => {
+    setIsLoading(true);
+
+    const fetchKennelData = async () => {
+      try {
+        // simulate api call
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // import mock json data
+        const kennelData = await import("../data/data.json");
+
+        setDogs(kennelData.dogs);
+        setKennels(kennelData.kennels);
+      } catch (err) {
+        setError("Failed to fetch kennel data");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchKennelData();
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -130,31 +158,44 @@ const KennelBoard = () => {
   }
 
   return (
-    <DndContext
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
-      collisionDetection={closestCenter}
-      modifiers={[restrictToWindowEdges]}
+    <EditContext.Provider
+      value={{
+        isEditing
+      }}
     >
-      <div className="flex flex-1 flex-col space-y-4 bg-gray-200 p-4">
-        <header className="rounded-lg bg-white shadow">
-          <ControlPanel />
-        </header>
+      <DndContext
+        sensors={isEditing ? sensors : []} // disable sensors if not in edit mode
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToWindowEdges]}
+      >
+        <div className="flex flex-1 flex-col space-y-4 bg-gray-200 p-4">
+          <header className="rounded-lg bg-white shadow">
+            <ControlPanel
+              startEditing={startEditing}
+              saveChanges={() => setIsEditing(false)}
+              discardChanges={discardChanges}
+            />
+          </header>
 
-        <div className="flex flex-grow flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-          <aside className="w-full rounded-lg bg-white p-4 shadow md:w-1/3">
-            <DogList dogs={dogs.filter((dog) => !dog.kennelId)} />
-          </aside>
-          <main className="w-full rounded-lg bg-white p-4 shadow md:w-2/3">
-            <KennelGrid kennels={kennels} dogs={dogs} />
-          </main>
+          <div className="flex flex-grow flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+            <aside className="w-full rounded-lg bg-white p-4 shadow md:w-1/3">
+              <DogList dogs={dogs.filter((dog) => !dog.kennelId)} />
+            </aside>
+
+            <main className="w-full rounded-lg bg-white p-4 shadow md:w-2/3">
+              <KennelGrid kennels={kennels} dogs={dogs} />
+            </main>
+          </div>
         </div>
-      </div>
-      <DragOverlay dropAnimation={null}>
-        {activeDog ? <DogCard dog={activeDog} /> : null}
-      </DragOverlay>
-    </DndContext>
+
+        <DragOverlay dropAnimation={null}>
+          {activeDog ? <DogCard dog={activeDog} /> : null}
+        </DragOverlay>
+      </DndContext>
+    </EditContext.Provider>
   );
 };
 
