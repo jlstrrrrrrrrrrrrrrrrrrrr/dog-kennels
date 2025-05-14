@@ -1,4 +1,5 @@
 import React from "react";
+import { useDroppable } from "@dnd-kit/core";
 import { cn } from "../lib/utils";
 import { Kennel, Dog } from "../types/types";
 import DogCard from "./DogCard";
@@ -9,17 +10,27 @@ interface KennelCardProps {
 }
 
 const KennelCard: React.FC<KennelCardProps> = ({ kennel, dogsInKennel }) => {
+  const { isOver, setNodeRef, active } = useDroppable({
+    id: kennel.id,
+    data: { kennelId: kennel.id, type: "kennel-drop-zone" }
+  });
+
   const capacityStatus = `(${dogsInKennel.length}/${kennel.capacity})`;
   const isFull = dogsInKennel.length >= kennel.capacity;
+  const canDrop = active && !isFull; // we can only drop if target not full and something is being dragged (active)
 
   return (
     <div
+      ref={setNodeRef} // entire card is a valid drop zone
       className={cn(
         "rounded-lg border border-green-200 bg-green-50 p-4",
         "shadow transition-shadow duration-200 hover:shadow-lg",
         "flex flex-col space-y-2",
         {
-          "border-red-300 bg-red-50": isFull
+          "border-red-300 bg-red-50": isFull,
+          "bg-green-100 ring-2 ring-green-500": isOver && canDrop, // green if we can drop
+          "bg-red-100 ring-2 ring-red-500": isOver && isFull, // red if we cant drop
+          "opacity-75": isOver && isFull
         }
       )}
     >
@@ -38,7 +49,13 @@ const KennelCard: React.FC<KennelCardProps> = ({ kennel, dogsInKennel }) => {
         {dogsInKennel.length > 0 ? (
           dogsInKennel.map((dog) => <DogCard key={dog.id} dog={dog} />)
         ) : (
-          <p className="py-2 text-center text-xs text-gray-400">Empty Kennel</p>
+          <p className="py-2 text-center text-xs text-gray-400">
+            {isOver && canDrop
+              ? "Drop dog here"
+              : isOver && isFull
+                ? "Kennel Full"
+                : "Empty Kennel"}
+          </p>
         )}
       </div>
     </div>

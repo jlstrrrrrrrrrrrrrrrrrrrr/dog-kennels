@@ -19,8 +19,7 @@ const ControlPanel: React.FC<ControlPanelProps> = () => {
   };
 
   return (
-    <div className="mt-2 flex flex-col items-center gap-1 space-y-2 rounded-md border border-gray-200 bg-gray-50 p-3">
-      <p className="text-sm font-medium text-gray-700">Board Control</p>
+    <div className="flex flex-col items-center gap-1 space-y-2 rounded-md border border-gray-200 bg-gray-50 p-6">
       <div className="flex justify-center space-x-2">
         {!isEditing ? (
           <ControlButton
