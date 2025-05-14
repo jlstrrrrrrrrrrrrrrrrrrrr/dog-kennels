@@ -1,0 +1,18 @@
+{
+  "dogs": [
+    { "id": "1", "name": "Dog 1", "chipNumber": "CHIP001", "kennelId": "k1" },
+    { "id": "2", "name": "Dog 2", "chipNumber": "CHIP002", "kennelId": null },
+    { "id": "3", "name": "Dog 3", "chipNumber": "CHIP003", "kennelId": "k1" },
+    { "id": "4", "name": "Dog 4", "chipNumber": "CHIP004", "kennelId": "k2" },
+    { "id": "5", "name": "Dog 5", "chipNumber": "CHIP005", "kennelId": null },
+    { "id": "6", "name": "Dog 6", "chipNumber": "CHIP006", "kennelId": null }
+  ],
+  "kennels": [
+    { "id": "k1", "name": "Kennel 1", "capacity": 2 },
+    { "id": "k2", "name": "Kennel 2", "capacity": 2 },
+    { "id": "k3", "name": "Kennel 3", "capacity": 2 },
+    { "id": "k4", "name": "Kennel 4", "capacity": 2 },
+    { "id": "k5", "name": "Kennel 5", "capacity": 2 },
+    { "id": "k6", "name": "Kennel 6", "capacity": 2 }
+  ]
+}
