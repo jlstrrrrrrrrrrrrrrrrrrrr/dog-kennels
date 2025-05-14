@@ -17,12 +17,13 @@ import KennelGrid from "./KennelGrid";
 import ControlPanel from "./ControlPanel";
 import DogCard from "./DogCard";
 import { EditContext } from "../context/EditContext";
+import useFetchKennelData from "../hooks/useFetchKennelData";
 
 const KennelBoard = () => {
-  const [dogs, setDogs] = useState<Dog[]>([]);
-  const [kennels, setKennels] = useState<Kennel[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error } = useFetchKennelData();
+
+  const [dogs, setDogs] = useState<Dog[]>(data?.dogs || []);
+  const [kennels, setKennels] = useState<Kennel[]>(data?.kennels || []);
   const [activeDog, setActiveDog] = useState<Dog | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<{
@@ -118,28 +119,11 @@ const KennelBoard = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-
-    const fetchKennelData = async () => {
-      try {
-        // simulate api call
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // import mock json data
-        const kennelData = await import("../data/data.json");
-
-        setDogs(kennelData.dogs);
-        setKennels(kennelData.kennels);
-      } catch (err) {
-        setError("Failed to fetch kennel data");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchKennelData();
-  }, []);
+    if (data) {
+      setDogs(data.dogs);
+      setKennels(data.kennels);
+    }
+  }, [data]);
 
   if (isLoading) {
     return (
