@@ -2,8 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
   closestCenter,
   useSensor,
   PointerSensor,
@@ -15,7 +13,6 @@ import { Dog, Kennel } from "../types/types";
 import DogList, { UNASSIGNED_AREA_ID } from "./DogList";
 import KennelGrid from "./KennelGrid";
 import ControlPanel from "./ControlPanel";
-import DogCard from "./DogCard";
 import { EditContext } from "../context/EditContext";
 import useFetchKennelData from "../hooks/useFetchKennelData";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -26,7 +23,6 @@ const KennelBoard = () => {
 
   const [dogs, setDogs] = useState<Dog[]>(data?.dogs || []);
   const [kennels, setKennels] = useState<Kennel[]>(data?.kennels || []);
-  const [activeDog, setActiveDog] = useState<Dog | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<{
     dogs: Dog[];
@@ -60,18 +56,7 @@ const KennelBoard = () => {
     toast.success("Changes saved successfully!");
   }, []);
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    const dog = dogs.find((dog) => dog.id === active.id);
-
-    if (dog) {
-      setActiveDog(dog);
-    }
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
-    setActiveDog(null);
-
     const { active, over } = event;
 
     // if we have something dragged + a valid and activated drop target container
@@ -107,7 +92,7 @@ const KennelBoard = () => {
 
       // also prevent drop if kennel is full
       if (targetKennel && dogsInTargetKennel >= targetKennel.capacity) {
-        console.warn(`${targetKennel.name} is full.`);
+        toast.error(`${targetKennel.name} is full, dog has been reset.`);
         return;
       }
 
@@ -123,10 +108,6 @@ const KennelBoard = () => {
         )
       );
     }
-  };
-
-  const handleDragCancel = () => {
-    setActiveDog(null);
   };
 
   useEffect(() => {
@@ -156,9 +137,7 @@ const KennelBoard = () => {
     >
       <DndContext
         sensors={isEditing ? sensors : []} // disable sensors if not in edit mode
-        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
         collisionDetection={closestCenter}
         modifiers={[restrictToWindowEdges]}
       >
@@ -181,10 +160,6 @@ const KennelBoard = () => {
             </main>
           </div>
         </div>
-
-        <DragOverlay dropAnimation={null}>
-          {activeDog ? <DogCard dog={activeDog} /> : null}
-        </DragOverlay>
       </DndContext>
     </EditContext.Provider>
   );
