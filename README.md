@@ -3,9 +3,11 @@
 ## Description
 
 Interactive drag-and-drop interface for managing dogs in kennels.
+Uses mock json data with no backend integration.
 
 ## Features
 
+- Fully responsive design
 - Drag and drop dogs between kennels
 - Edit mode with save/discard functionality
 - Validation (max 2 dogs per kennel)
@@ -19,4 +21,4 @@ Interactive drag-and-drop interface for managing dogs in kennels.
 
 ## Deployment
 
-App deployed at [https://dog-kennels.vercel.app/]
+Live demo deployed at [https://dog-kennels.vercel.app/]
