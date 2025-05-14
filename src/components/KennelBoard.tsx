@@ -18,6 +18,7 @@ import ControlPanel from "./ControlPanel";
 import DogCard from "./DogCard";
 import { EditContext } from "../context/EditContext";
 import useFetchKennelData from "../hooks/useFetchKennelData";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 const KennelBoard = () => {
   const { data, isLoading, error } = useFetchKennelData();
@@ -126,11 +127,7 @@ const KennelBoard = () => {
   }, [data]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading kennel data...
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {

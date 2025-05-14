@@ -22,7 +22,7 @@ const useFetchKennelData = (): FetchState => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1200));
 
         const { dogs, kennels } = await import("../data/data.json");
 
